@@ -1,5 +1,21 @@
 ---
-- name: Ping all hosts
-  hosts: all
+- name: Check connectivity to endpoints
+  hosts: your_target_hosts
+  gather_facts: False
   tasks:
-    - name: Ping all nodes ansible.builtin.ping
+    - name: Check if github.com:22 is accessible
+      wait_for:
+        host: github.com
+        port: 22
+        state: started
+        delay: 0
+        timeout: 1
+
+    - name: Check if 192.168.33.12:25 is accessible
+      wait_for:
+        host: 192.168.33.12
+        port: 25
+        state: started
+        delay: 0
+        timeout: 1
+        search_regex: Postfix
