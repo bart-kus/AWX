@@ -1,6 +1,6 @@
 ---
 - name: Ping endpoint three times
-  hosts: 192.168.68.200
+  hosts: all
   tasks:
     - name: Ping the endpoint
       ansible.builtin.ping:
