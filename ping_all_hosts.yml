@@ -1,19 +1,7 @@
 ---
-- hosts: 192.168.68.200
+- name: ping module demo
+  hosts: all
   become: false
-  gather_facts: false
-
   tasks:
-
-  - name: ICMP ping from Control Node to Remote Node
-    delegate_to: localhost # or controlnode.example.com
-    command: ping -c 2 "{{ 192.168.68.200 }}"
-    # Because it is an reporting task
-    changed_when: false 
-    check_mode: false
-    failed_when: router_ping.rc == 1 or router_ping.rc > 2 # will result into success for rc 0 and rc 2
-    register: router_ping
-
-  - name: Show Return Code
-    debug:
-      msg: "{{ router_ping.rc }}"
+    - name: test connection
+      ansible.builtin.ping:
