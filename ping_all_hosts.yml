@@ -1,7 +1,6 @@
 ---
-- name: Ping endpoint three times
-  hosts: all
+- name: Ping endpoint
+  hosts: your_target_hosts
   tasks:
     - name: Ping the endpoint
-      ansible.builtin.ping:
-        count: 3
+      ansible.builtin.ping
