@@ -1,5 +1,5 @@
 ---
-- hosts: test
+- hosts: 192.168.68.200
   become: false
   gather_facts: false
 
