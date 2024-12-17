@@ -1,19 +1,48 @@
 ---
-- name: Ping hosts from GitHub file
+- name: Check IP connectivity
   hosts: localhost
-  remote_user: bart
+  gather_facts: no
+  vars:
+    input_file: "{{ input_file }}"
+    output_file: output.txt
   tasks:
-    - name: Clone the GitHub repository
-      git:
-        repo: 'https://github.com/bart-kus/AWX.git'
-        dest: /tmp/bart-kus
-
-    - name: Read IP addresses from file
-      command: /tmp/bart-kus/hosts.txt
+    - name: Read IPs from file
+      command: cat {{ input_file }}
       register: ip_list
 
-    - name: Ping each host
-      ansible.builtin.ping:
+    - name: Check IP connectivity
+      shell: nc -vz {{ item }} 22 2>&1
+      register: result
       with_items: "{{ ip_list.stdout_lines }}"
-      loop_control:
-        loop_var: ip
+      ignore_errors: yes
+
+    - name: Write results to output file
+      copy:
+        content: |
+          {% for item in result.results %}
+          {{ item.item }}: {{ 'success' if item.stdout is defined and 'Connected' in item.stdout else 'failed' }}
+          {% endfor %}
+        dest: "{{ output_file }}"
+
+    - name: Read output file
+      slurp:
+        src: "{{ output_file }}"
+      register: output_content
+
+    - name: Decode output file content
+      set_fact:
+        output_text: "{{ output_content.content | b64decode }}"
+
+    - name: Count successes
+      set_fact:
+        success_count: "{{ output_text.split('\n') | select('search', 'success') | list | length }}"
+
+    - name: Count failures
+      set_fact:
+        failed_count: "{{ output_text.split('\n') | select('search', 'failed') | list | length }}"
+
+    - name: Print results
+      debug:
+        msg:
+          Success: "{{ success_count }}"
+          Failed: "{{ failed_count }}"
