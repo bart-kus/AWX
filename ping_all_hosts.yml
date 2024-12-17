@@ -3,9 +3,20 @@
   hosts: localhost
   gather_facts: no
   vars:
-    input_file: "{{ input_file }}"
+    input_file: "{{ input_file | default('hosts.txt') }}"
     output_file: output.txt
   tasks:
+    - name: Validate input_file variable
+      assert:
+        that:
+          - input_file is defined
+          - input_file | length > 0
+        msg: "The input_file variable is not defined or empty."
+
+    - name: Debug input_file value
+      debug:
+        msg: "input_file: {{ input_file }}"
+
     - name: Read IPs from file
       command: cat {{ input_file }}
       register: ip_list
@@ -24,25 +35,6 @@
           {% endfor %}
         dest: "{{ output_file }}"
 
-    - name: Read output file
-      slurp:
-        src: "{{ output_file }}"
-      register: output_content
-
-    - name: Decode output file content
-      set_fact:
-        output_text: "{{ output_content.content | b64decode }}"
-
-    - name: Count successes
-      set_fact:
-        success_count: "{{ output_text.split('\n') | select('search', 'success') | list | length }}"
-
-    - name: Count failures
-      set_fact:
-        failed_count: "{{ output_text.split('\n') | select('search', 'failed') | list | length }}"
-
     - name: Print results
       debug:
-        msg:
-          Success: "{{ success_count }}"
-          Failed: "{{ failed_count }}"
+        msg: "Output file generated: {{ output_file }}"
