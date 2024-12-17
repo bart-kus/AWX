@@ -8,7 +8,7 @@
         dest: /tmp/bart-kus
 
     - name: Read IP addresses from file
-      command: hosts.txt
+      command: /tmp/bart-kus/hosts.txt
       register: ip_list
 
     - name: Ping each host
