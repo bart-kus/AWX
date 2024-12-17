@@ -8,7 +8,7 @@
         dest: /tmp/yourrepository
 
     - name: Read IP addresses from file
-      command: cat /tmp/bart-kus/hosts.txt
+      command: cat /tmp/bart-kus/ts.txt
       register: ip_list
 
     - name: Ping each host
