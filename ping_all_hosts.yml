@@ -1,6 +1,7 @@
 ---
 - name: Ping hosts from GitHub file
   hosts: localhost
+  become: yes
   tasks:
     - name: Clone the GitHub repository
       git:
