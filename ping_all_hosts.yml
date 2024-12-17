@@ -4,11 +4,11 @@
   tasks:
     - name: Clone the GitHub repository
       git:
-        repo: 'https://github.com/bart-kus/AWX'
+        repo: 'https://github.com/bart-kus/AWX.git'
         dest: /tmp/yourrepository
 
     - name: Read IP addresses from file
-      command: cat /tmp/bart-kus/ts.txt
+      command: cat /tmp/bart-kus/hosts.txt
       register: ip_list
 
     - name: Ping each host
