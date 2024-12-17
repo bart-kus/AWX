@@ -1,7 +1,18 @@
 ---
-- name: ping module demo
-  hosts: all
-  become: false
+- name: Ping hosts from GitHub file
+  hosts: localhost
   tasks:
-    - name: test connection
+    - name: Clone the GitHub repository
+      git:
+        repo: 'https://github.com/bart-kus/AWX'
+        dest: /tmp/yourrepository
+
+    - name: Read IP addresses from file
+      command: cat /tmp/bart-kus/hosts.txt
+      register: ip_list
+
+    - name: Ping each host
       ansible.builtin.ping:
+      with_items: "{{ ip_list.stdout_lines }}"
+      loop_control:
+        loop_var: ip
