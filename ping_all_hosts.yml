@@ -1,7 +1,7 @@
 ---
 - name: Ping hosts from GitHub file
   hosts: localhost
-  become: yes
+ remote_user: bart
   tasks:
     - name: Clone the GitHub repository
       git:
