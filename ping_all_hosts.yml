@@ -11,7 +11,7 @@
         name: "{{ 'nc' if ansible_os_family == 'Debian' else 'nmap-ncat' }}"
         state: present
       become: yes
-      become_method: su  # Use 'su' instead of 'sudo'
+      become_method: sodo  # Use 'su' instead of 'sudo'
 
     - name: Validate input_file variable
       assert:
