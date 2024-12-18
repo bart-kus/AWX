@@ -6,6 +6,12 @@
     input_file: "{{ input_file | default('hosts.txt') }}"
     output_file: output.txt
   tasks:
+    - name: Install nc (netcat)
+      package:
+        name: "{{ 'nc' if ansible_os_family == 'Debian' else 'nmap-ncat' }}"
+        state: present
+      become: yes
+
     - name: Validate input_file variable
       assert:
         that:
