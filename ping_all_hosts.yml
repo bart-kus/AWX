@@ -1,7 +1,7 @@
 ---
 - name: Check IP connectivity
   hosts: localhost
-  gather_facts: no
+  gather_facts: yes
   vars:
     input_file: "{{ input_file | default('hosts.txt') }}"
     output_file: output.txt
