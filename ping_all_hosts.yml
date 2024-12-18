@@ -2,6 +2,7 @@
 - name: Check IP connectivity
   hosts: localhost
   gather_facts: yes
+  become: yes  # This runs everything with elevated privileges
   vars:
     input_file: "{{ input_file | default('hosts.txt') }}"
     output_file: output.txt
